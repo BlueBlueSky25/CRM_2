@@ -1,8 +1,9 @@
-@props(['currentMenuId'])
+@props(['currentMenuId', 'salesUsers', 'provinces', 'types'])
 
 <!-- EDIT SALES VISIT MODAL -->
-<div id="editVisitModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+<div id="editVisitModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto" style="height: 100vh; width: 100vw; max-height: 100vh; max-width: 100vw;">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-hidden animate-fadeIn">
+
         
         <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-gray-200" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #3b82f6 100%);">
@@ -160,9 +161,11 @@
                                         </div>
                                         <select name="province_id" id="edit-province"
                                             class="w-full pl-9 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none bg-white"
-                                            onchange="checkEditAddressCompletion()"
-                                            required>
+                                            onchange="checkEditAddressCompletion()">
                                             <option value="">-- Pilih Provinsi --</option>
+                                            @foreach($provinces as $province)
+                                                <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                            @endforeach
                                         </select>
                                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                             <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
@@ -305,140 +308,3 @@
 .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
 </style>
 
-<script>
-// ========== EDIT ADDRESS SECTION TOGGLE ==========
-function toggleEditAddressSection() {
-    const content = document.getElementById('edit-address-content');
-    const icon = document.getElementById('edit-address-toggle-icon');
-    
-    if (content.classList.contains('hidden')) {
-        content.classList.remove('hidden');
-        icon.style.transform = 'rotate(180deg)';
-    } else {
-        content.classList.add('hidden');
-        icon.style.transform = 'rotate(0deg)';
-    }
-}
-
-function checkEditAddressCompletion() {
-    const province = document.getElementById('edit-province').value;
-    const address = document.getElementById('editAddress').value.trim();
-    const statusText = document.getElementById('edit-address-status');
-    const content = document.getElementById('edit-address-content');
-    const icon = document.getElementById('edit-address-toggle-icon');
-    
-    if (province && address) {
-        statusText.textContent = 'Sudah diisi';
-        statusText.classList.remove('text-gray-500');
-        statusText.classList.add('text-green-600', 'font-medium');
-        
-        setTimeout(() => {
-            if (!content.classList.contains('hidden')) {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }, 800);
-    } else {
-        statusText.textContent = 'Belum diisi';
-        statusText.classList.remove('text-green-600', 'font-medium');
-        statusText.classList.add('text-gray-500');
-    }
-}
-
-// ========== EDIT COMPANY DROPDOWN ==========
-let editCompanyDropdownTimeout = null;
-let editCurrentCompanies = [];
-
-async function loadEditCompanies(search = '') {
-    try {
-        console.log('🔄 Loading edit companies...');
-        const response = await fetch('/company/get-companies-dropdown');
-        const data = await response.json();
-        
-        if (data.success) {
-            editCurrentCompanies = data.companies;
-            updateEditCompanyDropdown(search);
-        }
-    } catch (error) {
-        console.error('❌ Error loading edit companies:', error);
-    }
-}
-
-function updateEditCompanyDropdown(search = '') {
-    const dropdown = document.getElementById('edit-company-options');
-    const searchTerm = search.toLowerCase();
-    const filteredCompanies = editCurrentCompanies.filter(company => 
-        company.name.toLowerCase().includes(searchTerm)
-    );
-    
-    dropdown.innerHTML = '';
-    
-    filteredCompanies.forEach(company => {
-        const option = document.createElement('div');
-        option.className = 'px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 cursor-pointer';
-        option.textContent = company.name;
-        option.onclick = () => selectEditCompany(company.id, company.name);
-        dropdown.appendChild(option);
-    });
-    
-    const dropdownContainer = document.getElementById('edit-company-dropdown');
-    if (filteredCompanies.length > 0) {
-        dropdownContainer.classList.remove('hidden');
-    } else {
-        dropdownContainer.classList.add('hidden');
-    }
-}
-
-function selectEditCompany(companyId, companyName) {
-    console.log('✅ Edit company selected:', { companyId, companyName });
-    document.getElementById('edit-company-id').value = companyId;
-    document.getElementById('edit-company-search').value = companyName;
-    document.getElementById('edit-company-dropdown').classList.add('hidden');
-}
-
-function initEditCompanyDropdown() {
-    const searchInput = document.getElementById('edit-company-search');
-    const dropdown = document.getElementById('edit-company-dropdown');
-    
-    if (!searchInput || !dropdown) return;
-    
-    searchInput.addEventListener('focus', () => loadEditCompanies(searchInput.value));
-    
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(editCompanyDropdownTimeout);
-        editCompanyDropdownTimeout = setTimeout(() => updateEditCompanyDropdown(e.target.value), 300);
-    });
-    
-    document.addEventListener('click', (e) => {
-        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add('hidden');
-        }
-    });
-    
-    loadEditCompanies();
-}
-
-window.closeEditVisitModal = function() {
-    document.getElementById('editVisitModal').classList.add('hidden');
-    document.getElementById('editVisitForm').reset();
-    document.body.style.overflow = 'auto';
-    
-    // Reset company dropdown
-    document.getElementById('edit-company-id').value = '';
-    document.getElementById('edit-company-search').value = '';
-    document.getElementById('edit-company-dropdown').classList.add('hidden');
-    
-    // Reset address collapse state
-    const content = document.getElementById('edit-address-content');
-    const icon = document.getElementById('edit-address-toggle-icon');
-    const statusText = document.getElementById('edit-address-status');
-    
-    if (content) content.classList.add('hidden');
-    if (icon) icon.style.transform = 'rotate(0deg)';
-    if (statusText) {
-        statusText.textContent = 'Belum diisi';
-        statusText.classList.remove('text-green-600', 'font-medium');
-        statusText.classList.add('text-gray-500');
-    }
-};
-</script>

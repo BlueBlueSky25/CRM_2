@@ -143,6 +143,7 @@
                             onclick="openEditVisitModal({{ json_encode([
                                 'id' => $visit->id,
                                 'salesId' => $visit->sales_id,
+                                'picId' => $visit->pic_id,
                                 'picName' => $visit->pic_name,
                                 'companyId' => $visit->company_id,
                                 'companyName' => optional($visit->company)->company_name ?? '',

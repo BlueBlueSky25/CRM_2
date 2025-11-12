@@ -80,7 +80,7 @@
 
 <!-- Modals -->
 <x-salesvisit.action.action :currentMenuId="$currentMenuId" :salesUsers="$salesUsers" :provinces="$provinces" :types="$types"/>
-<x-salesvisit.action.edit :currentMenuId="$currentMenuId" :salesUsers="$salesUsers" :provinces="$provinces" :types="$types" />
+<x-salesvisit.action.edit :currentMenuId="$currentMenuId" :salesUsers="$salesUsers" :provinces="$provinces" :types="$types"/>
 
 @push('scripts')
 <script src="{{ asset('js/search.js') }}"></script>
