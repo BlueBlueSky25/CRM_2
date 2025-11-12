@@ -1020,44 +1020,59 @@ function initEditVisitCascade() {
 
 // ==================== DELETE ====================
 function deleteVisit(visitId, deleteRoute, csrfToken) {
-    console.log('🗑️ deleteVisit called:', { visitId, deleteRoute, csrfToken });
+    console.log('🗑️ Delete visit:', visitId);
 
-    if (confirm('Apakah Anda yakin ingin menghapus data kunjungan ini?')) {
-        const correctRoute = `/salesvisit/${visitId}`;
-        
-        fetch(correctRoute, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message || 'Network response was not ok');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                showNotification(data.message, 'success');
-                
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                throw new Error(data.message || 'Gagal menghapus data');
-            }
-        })
-        .catch(error => {
-            console.error('❌ Error:', error);
-            showNotification('Gagal menghapus data: ' + error.message, 'error');
-        });
+    if (!confirm('Apakah Anda yakin ingin menghapus data kunjungan ini?')) {
+        return;
     }
+
+    // Gunakan route yang benar
+    const correctRoute = `/salesvisit/${visitId}`;
+    console.log('🚨 Delete route:', correctRoute);
+
+    fetch(correctRoute, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log('📨 Delete response status:', response.status);
+        
+        if (response.status === 404) {
+            throw new Error('Endpoint tidak ditemukan (404)');
+        }
+        
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('❌ Delete error response:', text);
+                throw new Error('Network response was not ok');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('✅ Delete success:', data);
+        if (data.success) {
+            showNotification(data.message || 'Data berhasil dihapus', 'success');
+            
+            // Refresh halaman setelah 1 detik
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(data.message || 'Gagal menghapus data');
+        }
+    })
+    .catch(error => {
+        console.error('❌ Delete error:', error);
+        showNotification('Gagal menghapus data: ' + error.message, 'error');
+    });
 }
+
+ 
 
 // ==================== ADDRESS SECTION TOGGLE ====================
 function toggleAddressSection() {
