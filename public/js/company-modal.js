@@ -240,12 +240,12 @@ async function loadEditCompanyData(companyId) {
             const logoPreview = document.getElementById('editLogoPreview');
             const logoUploadPrompt = document.getElementById('editLogoUploadPrompt');
             
-            if (c.company_logo && c.company_logo !== null && c.company_logo !== '' && c.company_logo !== '-') {
-                console.log('🖼️ Loading logo:', c.company_logo);
+            if (c.logo && c.logo !== null && c.logo !== '' && c.logo !== '-') {
+                console.log('🖼️ Loading logo:', c.logo);
                 
                 const testImg = new Image();
                 testImg.onload = function() {
-                    logoPreview.src = c.company_logo;
+                    logoPreview.src = c.logo;
                     logoPreviewContainer.style.display = 'block';
                     logoUploadPrompt.style.display = 'none';
                     console.log('✅ Logo loaded');
@@ -255,7 +255,7 @@ async function loadEditCompanyData(companyId) {
                     logoPreviewContainer.style.display = 'none';
                     logoUploadPrompt.style.display = 'block';
                 };
-                testImg.src = c.company_logo;
+                testImg.src = c.logo;
             } else {
                 logoPreviewContainer.style.display = 'none';
                 logoUploadPrompt.style.display = 'block';
@@ -583,7 +583,7 @@ function previewLogo(event) {
     if (file) {
         if (file.size > 5 * 1024 * 1024) {
             alert('Ukuran file terlalu besar! Maksimal 5MB');
-            document.getElementById('company_logo').value = '';
+            document.getElementById('logo').value = '';
             return;
         }
 
@@ -598,7 +598,7 @@ function previewLogo(event) {
 }
 
 function clearLogoPreview() {
-    document.getElementById('company_logo').value = '';
+    document.getElementById('logo').value = '';
     document.getElementById('logoPreviewContainer').style.display = 'none';
     document.getElementById('logoUploadPrompt').style.display = 'block';
 }
@@ -608,7 +608,7 @@ function previewEditLogo(event) {
     if (file) {
         if (file.size > 5 * 1024 * 1024) {
             alert('Ukuran file terlalu besar! Maksimal 5MB');
-            document.getElementById('edit_company_logo').value = '';
+            document.getElementById('edit_logo').value = '';
             return;
         }
 
@@ -623,7 +623,7 @@ function previewEditLogo(event) {
 }
 
 function clearEditLogoPreview() {
-    document.getElementById('edit_company_logo').value = '';
+    document.getElementById('edit_logo').value = '';
     document.getElementById('editLogoPreviewContainer').style.display = 'none';
     document.getElementById('editLogoUploadPrompt').style.display = 'block';
 }
@@ -636,13 +636,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup drag and drop for ADD modal
     const logoDropZone = document.getElementById('logoDropZone');
     if (logoDropZone) {
-        setupDragDrop(logoDropZone, 'company_logo', previewLogo);
+        setupDragDrop(logoDropZone, 'logo', previewLogo);
     }
     
     // Setup drag and drop for EDIT modal
     const editLogoDropZone = document.getElementById('editLogoDropZone');
     if (editLogoDropZone) {
-        setupDragDrop(editLogoDropZone, 'edit_company_logo', previewEditLogo);
+        setupDragDrop(editLogoDropZone, 'edit_logo', previewEditLogo);
     }
 });
 

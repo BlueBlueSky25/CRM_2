@@ -236,7 +236,7 @@ function showCompanyDetail(companyId) {
                 const c = data.company;
                 
                 // Tambahkan ini untuk debugging logo
-                console.log('Logo data:', c.company_logo);
+                console.log('Logo data:', c.logo);
                 console.log('Full company object:', c);
 
                 // Basic info
@@ -290,10 +290,10 @@ function showCompanyDetail(companyId) {
 
                 // Logo - Diperbaiki dengan lebih banyak debugging
                 const logoContainer = document.getElementById('detailLogoContainer');
-                console.log('Checking logo:', c.company_logo);
+                console.log('Checking logo:', c.logo);
                 
-                if (c.company_logo && c.company_logo !== null && c.company_logo !== '') {
-                    logoContainer.innerHTML = `<img src="${c.company_logo}" style="max-width: 100%; max-height: 150px; border-radius: 0.75rem;" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'width: 120px; height: 120px; background-color: #e5e7eb; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;\\'><i class=\\'fas fa-image\\' style=\\'font-size: 2.5rem; color: #9ca3af;\\'></i></div>';">`;
+                if (c.logo && c.logo !== null && c.logo !== '') {
+                    logoContainer.innerHTML = `<img src="${c.logo}" style="max-width: 100%; max-height: 150px; border-radius: 0.75rem;" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'width: 120px; height: 120px; background-color: #e5e7eb; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;\\'><i class=\\'fas fa-image\\' style=\\'font-size: 2.5rem; color: #9ca3af;\\'></i></div>';">`;
                 } else {
                     logoContainer.innerHTML = `<div style="width: 120px; height: 120px; background-color: #e5e7eb; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="font-size: 2.5rem; color: #9ca3af;"></i></div>`;
                 }

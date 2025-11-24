@@ -302,8 +302,8 @@
                                  onmouseover="this.style.borderColor='#3b82f6'; this.style.backgroundColor='#eff6ff';"
                                  onmouseout="this.style.borderColor='#d1d5db'; this.style.backgroundColor='#fafafa';">
                                 <input type="file" 
-                                    id="company_logo" 
-                                    name="company_logo" 
+                                    id="logo" 
+                                    name="logo" 
                                     accept="image/*" 
                                     style="display: none;"
                                     onchange="previewLogo(event)">

@@ -258,7 +258,7 @@ class CompanyController extends Controller
                     'company_website' => $company->website ?? null,
                     'company_linkedin' => $company->linkedin ?? null,
                     'company_instagram' => $company->instagram ?? null,
-                    'company_logo' => $company->logo ? asset('storage/' . $company->logo) : null,
+                    'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
                 ],
                 'pics' => $pics->map(function($pic) {
                     return [
@@ -305,7 +305,7 @@ class CompanyController extends Controller
             'company_website' => 'nullable|url|max:255',
             'company_linkedin' => 'nullable|url|max:255',
             'company_instagram' => 'nullable|string|max:255',
-            'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             
             // 🔥 PICs validation
             'pics' => 'nullable|array',
@@ -320,8 +320,8 @@ class CompanyController extends Controller
 
             // 🔥 Handle logo upload
             $logoPath = null;
-            if ($request->hasFile('company_logo')) {
-                $logoPath = $request->file('company_logo')->store('company_logos', 'public');
+            if ($request->hasFile('logo')) {
+                $logoPath = $request->file('logo')->store('logos', 'public');
                 \Log::info('✅ Logo uploaded:', ['path' => $logoPath]);
             }
 
@@ -412,7 +412,7 @@ class CompanyController extends Controller
             'company_website' => 'nullable|url|max:255',
             'company_linkedin' => 'nullable|url|max:255',
             'company_instagram' => 'nullable|string|max:255',
-            'company_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             
             // 🔥 PICs validation
             'pics' => 'nullable|array',
@@ -427,12 +427,12 @@ class CompanyController extends Controller
 
             // 🔥 Handle logo upload
             $logoPath = $company->logo;
-            if ($request->hasFile('company_logo')) {
+            if ($request->hasFile('logo')) {
                 // Delete old logo
                 if ($company->logo) {
                     Storage::disk('public')->delete($company->logo);
                 }
-                $logoPath = $request->file('company_logo')->store('company_logos', 'public');
+                $logoPath = $request->file('logo')->store('logos', 'public');
                 \Log::info('✅ Logo updated:', ['path' => $logoPath]);
             }
 
